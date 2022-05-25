@@ -1,0 +1,6 @@
+[submodule "app-vue"]
+	path = app-vue
+	url = git@github.com:LucasVmigotto/social-me-app-vue.git
+[submodule "api"]
+	path = api
+	url = git@github.com:LucasVmigotto/social-me-api.git

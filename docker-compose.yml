@@ -1,0 +1,95 @@
+version: '3'
+
+services:
+  social-me-pgsql:
+    image: postgres:14
+    container_name: social-me-pgsql
+    hostname: social-me-pgsql
+    env_file: .env
+    volumes:
+    - pgsql-data:/var/lib/postgresql/data
+    networks:
+    - socialme-network
+
+  pgsql-cli:
+    image: pygmy/pgcli
+    container_name: pgsql-cli
+    command: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST/$POSTGRES_DB
+    stdin_open: true
+    tty: true
+    links:
+    - social-me-pgsql
+    volumes:
+    - pgsqlcli-home:/root
+    networks:
+    - socialme-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: social-me-mailhog
+    ports:
+    - $MAILHOG_UI_PORT:$MAILHOG_UI_PORT
+    - $MAILHOG_PORT:$MAILHOG_PORT
+    networks:
+    - socialme-network
+
+  social-me:
+    build:
+      context: ./docker
+    container_name: social-me
+    hostname: social-me
+    working_dir: /app
+    tty: true
+    env_file: .env
+    volumes:
+    - .:/app:delegated
+    - home:/home/node
+    networks:
+    - socialme-network
+
+  social-me-api:
+    build:
+      context: ./docker
+    container_name: social-me-api
+    hostname: social-me-api
+    command: yarn start:dev
+    working_dir: /app/api
+    tty: true
+    env_file: .env
+    ports:
+    - $API_PORT:$API_PORT
+    volumes:
+    - .:/app:delegated
+    - home:/home/node
+    networks:
+    - socialme-network
+
+  social-me-app-vue:
+    build:
+      context: ./docker
+    container_name: social-me-app-vue
+    hostname: social-me-app-vue
+    command: yarn dev
+    working_dir: /app/app-vue
+    tty: true
+    env_file: .env
+    environment:
+      VITE_APP_PORT: $APP_VUE_PORT
+      VITE_APP_VUE_TITLE: $APP_VUE_TITLE
+      VITE_APP_VUE_HOST: $APP_VUE_HOST
+      VITE_APP_VUE_PORT: $APP_VUE_PORT
+    ports:
+    - $APP_VUE_PORT:$APP_VUE_PORT
+    volumes:
+    - .:/app:delegated
+    - home:/home/node
+    networks:
+    - socialme-network
+
+volumes:
+  pgsql-data:
+  pgsqlcli-home:
+  home:
+
+networks:
+  socialme-network:

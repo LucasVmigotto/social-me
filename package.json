@@ -1,0 +1,24 @@
+{
+    "name": "social-me",
+    "version": "0.0.0",
+    "description": "Main project from Social Me",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:LucasVmigotto/social-me.git"
+    },
+    "author": {
+        "name": "Lucas Vidor Migotto",
+        "email": "lvmigotto1@gmail.com"
+    },
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "postinstall": "lerna bootstrap",
+        "build": "lerna run --stream build",
+        "lint": "lerna run --stream lint"
+    },
+    "devDependencies": {
+        "lerna": "^5.0.0"
+    }
+}
