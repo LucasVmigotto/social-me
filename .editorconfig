@@ -10,10 +10,10 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{js,ts,vue,yml}]
+[*.{js,ts,vue,yml,prisma}]
 indent_size = 2
 
-[*.{json,md,html,prisma}]
+[*.{json,md,html}]
 indent_size = 4
 
 [*.{Dockerfile}]

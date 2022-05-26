@@ -55,7 +55,9 @@ services:
     command: yarn start:dev
     working_dir: /app/api
     tty: true
-    env_file: .env
+    env_file:
+    - .env
+    - ./api/.env
     ports:
     - $API_PORT:$API_PORT
     volumes:
