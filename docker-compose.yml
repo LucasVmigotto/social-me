@@ -11,25 +11,30 @@ services:
     networks:
     - socialme-network
 
-  pgsql-cli:
-    image: pygmy/pgcli
-    container_name: pgsql-cli
-    command: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST/$POSTGRES_DB
-    stdin_open: true
-    tty: true
-    links:
-    - social-me-pgsql
-    volumes:
-    - pgsqlcli-home:/root
-    networks:
-    - socialme-network
-
-  mailhog:
+  social-me-mailhog:
     image: mailhog/mailhog
     container_name: social-me-mailhog
     ports:
     - $MAILHOG_UI_PORT:$MAILHOG_UI_PORT
     - $MAILHOG_PORT:$MAILHOG_PORT
+    networks:
+    - socialme-network
+
+  social-me-prisma-studio:
+    build:
+      context: ./docker
+    container_name: social-me-prisma-studio
+    command: yarn prisma:studio
+    working_dir: /app/api
+    tty: true
+    env_file:
+    - .env
+    - ./api/.env
+    ports:
+    - $PRISMA_PORT:$PRISMA_PORT
+    volumes:
+    - .:/app:delegated
+    - home:/home/node
     networks:
     - socialme-network
 
